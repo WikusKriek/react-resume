@@ -17,6 +17,8 @@ const ContactForm: FC = memo(() => {
   );
 
   const [data, setData] = useState<FormData>(defaultData);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submitStatus, setSubmitStatus] = useState<{success?: boolean; message?: string} | null>(null);
 
   const onChange = useCallback(
     <T extends HTMLInputElement | HTMLTextAreaElement>(event: React.ChangeEvent<T>): void => {
@@ -32,12 +34,45 @@ const ContactForm: FC = memo(() => {
   const handleSendMessage = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      /**
-       * This is a good starting point to wire up your form submission logic
-       * */
-      console.log('Data to send: ', data);
+      setIsSubmitting(true);
+      setSubmitStatus(null);
+      
+      try {
+        // You can use a serverless function URL here (Netlify, Vercel, AWS Lambda, etc.)
+        // Or use a service like FormSpree, Formik, etc.
+        const response = await fetch('https://formspree.io/f/your-form-id', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: data.name,
+            email: data.email,
+            message: data.message,
+            subject: 'Contact Form Submission from GitHub Page'
+          }),
+        });
+
+        if (response.ok) {
+          setSubmitStatus({
+            success: true,
+            message: 'Message sent successfully! I\'ll get back to you soon.',
+          });
+          setData(defaultData); // Reset form after successful submission
+        } else {
+          throw new Error('Failed to send message');
+        }
+      } catch (error) {
+        console.error('Error sending message:', error);
+        setSubmitStatus({
+          success: false,
+          message: 'Failed to send message. Please try again or contact me directly on LinkedIn.',
+        });
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [data],
+    [data, defaultData],
   );
 
   const inputClasses =
@@ -45,7 +80,7 @@ const ContactForm: FC = memo(() => {
 
   return (
     <form className="grid min-h-[320px] grid-cols-1 gap-y-4" method="POST" onSubmit={handleSendMessage}>
-      <input className={inputClasses} name="name" onChange={onChange} placeholder="Name" required type="text" />
+      <input className={inputClasses} name="name" onChange={onChange} placeholder="Name" required type="text" value={data.name} />
       <input
         autoComplete="email"
         className={inputClasses}
@@ -54,6 +89,7 @@ const ContactForm: FC = memo(() => {
         placeholder="Email"
         required
         type="email"
+        value={data.email}
       />
       <textarea
         className={inputClasses}
@@ -63,13 +99,26 @@ const ContactForm: FC = memo(() => {
         placeholder="Message"
         required
         rows={6}
+        value={data.message}
       />
+      
+      {submitStatus && (
+        <div className={`text-sm ${submitStatus.success ? 'text-green-400' : 'text-red-400'}`}>
+          {submitStatus.message}
+        </div>
+      )}
+      
       <button
         aria-label="Submit contact form"
-        className="w-max rounded-full border-2 border-orange-600 bg-stone-900 px-4 py-2 text-sm font-medium text-white shadow-md outline-none hover:bg-stone-800 focus:ring-2 focus:ring-orange-600 focus:ring-offset-2 focus:ring-offset-stone-800"
+        className="w-max rounded-full border-2 border-orange-600 bg-stone-900 px-4 py-2 text-sm font-medium text-white shadow-md outline-none hover:bg-stone-800 focus:ring-2 focus:ring-orange-600 focus:ring-offset-2 focus:ring-offset-stone-800 disabled:opacity-50"
+        disabled={isSubmitting}
         type="submit">
-        Send Message
+        {isSubmitting ? 'Sending...' : 'Send Message'}
       </button>
+      
+      <p className="text-xs text-neutral-400 mt-2">
+        Alternatively, you can message me directly on <a className="text-orange-600 hover:underline" href="https://www.linkedin.com/in/wikus-kriek-8b1433147/" rel="noopener noreferrer" target="_blank">LinkedIn</a>.
+      </p>
     </form>
   );
 });

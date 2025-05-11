@@ -197,6 +197,12 @@ export const portfolioItems: PortfolioItem[] = [
     image: walnutImage,
   },
   {
+    title: 'T Swaps',
+    description: 'A decentralized exchange for the Telos EVM and Telos Native',
+    url: 'https://tswaps.com/swap/',
+    image: tswapsImage,
+  },
+  {
     title: 'Fuelswitch',
     description:
       'We have created an exchange for willing buyers and sellers of renewable energy attributes. This replaced a very inefficient process and provides transparency, accountability and immutable proof of authenticity back to source.',
@@ -214,12 +220,6 @@ export const portfolioItems: PortfolioItem[] = [
     description: 'Antelope Native Block Explorer',
     url: 'https://explorer.telos.net/network',
     image: openBlockExplorerImage,
-  },
-  {
-    title: 'T Swaps',
-    description: 'A decentralized exchange for the Telos EVM and Telos Native',
-    url: 'https://tswaps.com/swap/',
-    image: tswapsImage,
   },
   {
     title: 'Telos Bridge',
@@ -257,7 +257,7 @@ export const experience: TimelineItem[] = [
   {
     date: '2022 - Present',
     location: 'Y-Knot Blockchain Solutions — Centurion, Gauteng',
-    title: 'Full Stack Developer',
+    title: 'Software Engineer',
     content: (
       <p>
         • Built distributed web applications using React, Node.js, and TypeScript, handling frontend development, backend
