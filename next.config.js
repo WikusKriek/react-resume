@@ -30,7 +30,7 @@ const nextConfig = {
    *
    * @see https://nextjs.org/docs/app/api-reference/next-config-js/basePath
    */
-  basePath: "/react-resume",
+  //basePath: "/react-resume",
   images: {
     unoptimized: true,
     remotePatterns: [
